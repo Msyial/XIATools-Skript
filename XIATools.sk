@@ -1,5 +1,9 @@
 #此脚本由Z1SHU 编写 适合作为生存服务器的基础插件进行运用
 #此脚本前置为 Skript , Ersatz
+#GitHub地址 https://github.com/Msyial/XIATools
+#BiliBili https://space.bilibili.com/25251781
+#此脚本可以进行修改 但请在原作者上保留我的名字
+#你可以在GitHub上Fork后提交Pr 参与脚本更新
 
 
 
@@ -12,8 +16,8 @@ on death:
 
 on load:
 	message "&7[&bXIA&3Tools&7] 加载成功 当前版本Version%{xiatools.version}%" to console 
-	set {xiatools.version} to "1.0.0" 
-	set {xiatools.author} to "LOVE1SGONE"
+	set {xiatools.version} to "1.0.0" #请不要修改谢谢
+	set {xiatools.author} to "Z1SHU" #请不要修改谢谢
 	set {xiatools.bili} to "https://space.bilibili.com/25251781"
 	set {xiatools.prefix} to "&7[&bXIA&3Tools&7]"
 
