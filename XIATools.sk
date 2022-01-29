@@ -1,0 +1,414 @@
+#此脚本由Z1SHU 编写 适合作为生存服务器的基础插件进行运用
+#此脚本前置为 Skript , Ersatz
+
+
+
+options:
+    delay: 3
+
+on death:
+    set {back.%player%} to location of player
+    stop
+
+on load:
+	message "&7[&bXIA&3Tools&7] 加载成功 当前版本Version%{xiatools.version}%" to console 
+	set {xiatools.version} to "1.0.0" 
+	set {xiatools.author} to "LOVE1SGONE"
+	set {xiatools.bili} to "https://space.bilibili.com/25251781"
+	set {xiatools.prefix} to "&7[&bXIA&3Tools&7]"
+
+on chat:
+    cancel event
+    set {_tag}  to placeholder "luckperms_prefix"
+    broadcast "%{_tag}% %player% &8» &f%message%"
+    stop
+
+command /back:
+    cooldown: 5 seconds
+    cooldown message: %{xiatools.prefix}% 指令冷却中
+    trigger:
+        if sender is player:
+            if {back.%player%} is set:
+                send "%{xiatools.prefix}% 正在返回上一死亡位置 请稍等 &c&l{@delay} &fs" to player
+                wait {@delay} second
+                teleport player to {back.%player%}
+                send "%{xiatools.prefix}% 返回成功!" to player
+                stop
+            if {back.%player%} is not set:
+                send "%{xiatools.prefix}% 未找到任何死亡位置!"
+                stop
+        if sender is console:
+            send "%{xiatools.prefix}% 请以玩家身份执行该命令" to console
+            stop
+
+command /Suicide:
+	usage: /Suicide
+	description: 自杀
+	cooldown: 10 seconds
+	cooldown message: %{xiatools.prefix}% 指令冷却中
+	trigger:
+		if sender is player:
+			kill player
+			send "%player% 结束了自己的生命" to all players
+			stop
+		if sender is console:
+			send "%{xiatools.prefix}% 请以玩家身份执行该命令" to console
+			stop		
+
+command /day:
+    permission: XIATools.TimeChange
+    permission message: %{xiatools.prefix}% 你没有使用该命令的权限
+    trigger:
+        set time to 6:00
+        set {_tag}  to placeholder "luckperms_prefix"
+        send "%{xiatools.prefix}% %{_tag}% %player% 将时间设置为 &l白天" to all players
+        stop
+
+command /night:
+    permission: XIATools.TimeChange
+    permission message: %{xiatools.prefix}% 你没有使用该命令的权限
+    trigger:
+        set time to 20:00
+        set {_tag}  to placeholder "luckperms_prefix"
+        send "%{xiatools.prefix}% %{_tag}% %player% 将时间设置为 &l夜晚" to all players
+        stop
+
+command /XIATools:
+	aliases: xiatools
+	trigger:
+		message "§3---§7------------------------§3---"
+		message "§3插件名: &7[&bXIA&3Tools&7]"
+		message "§3作者: §b%{xiatools.author}%"
+		message "§3版本: §bVersion %{xiatools.version}%"
+		message "&3BiliBili: &b%{xiatools.bili}%"
+		message "§3---§7------------------------§3---"
+
+command /gm [<text>] [<offline player>]:
+    permission: XIATools.Gamemode
+    permission message: %{xiatools.prefix}% 你没有使用该命令的权限
+    aliases: gamemode
+    trigger:
+        if arg 1 is not set:
+            send "%{xiatools.prefix}% 正确使用方式 /gamemode [0|1|2|3] [玩家ID]"
+        if arg 1 is set:
+            if arg 2 is not set:
+                if sender is player:
+                    if arg 1 is "1" or "creative":
+                        send "%{xiatools.prefix}% 已改变至 &l创造模式"
+                        set the gamemode of player to creative
+                        stop
+                    if arg 1 is "2" or "adventure":
+                        send "%{xiatools.prefix}% 已改变至 &l冒险模式"
+                        set the gamemode of player to adventure
+                        stop
+                    if arg 1 is "3" or "spectator":
+                        send "%{xiatools.prefix}% 已改变至 &l侦查模式"
+                        set the gamemode of player to spectator
+                        stop
+                    if arg 1 is "0" or "survival":
+                        send "%{xiatools.prefix}% 已改变至 &l生存模式"
+                        set the gamemode of player to survival
+                        stop
+                    else:
+                        send "%{xiatools.prefix}% 正确使用方式 /gamemode [0|1|2|3] [玩家ID]"
+                        stop
+                else:
+                    send "%{xiatools.prefix}% 请以玩家身份执行该命令" to console
+                    stop
+            else if arg 2 is set:
+                if sender is player:
+                    if arg 2 is online:
+                        if arg 1 is "1" or "creative":
+                            send "%{xiatools.prefix}% 已将玩家 %arg 2% 模式改变至 &l创造模式" to player
+                            set the gamemode of arg 2 to creative
+                            send "%{xiatools.prefix}% 已改变至 创造模式" to arg 2
+                            stop
+                        if arg 1 is "2" or "adventure":
+                            send "%{xiatools.prefix}% 已将玩家 %arg 2% 模式改变至 &l冒险模式"
+                            set the gamemode of arg 2 to adventure
+                            send "%{xiatools.prefix}% 已改变至 冒险模式" to arg 2
+                            stop
+                        if arg 1 is "3" or "spectator":
+                            send "%{xiatools.prefix}% 已将玩家 %arg 2% 模式改变至 &l侦查模式"
+                            set the gamemode of arg 2 to spectator
+                            send "%{xiatools.prefix}% 已改变至 侦查模式" to arg 2
+                            stop
+                        if arg 1 is "0" or "survival":
+                            send "%{xiatools.prefix}% 已将玩家 %arg 2% 模式改变至 &l生存模式"
+                            set the gamemode of arg 2 to survival
+                            send "%{xiatools.prefix}% 已改变至 生存模式" to arg 2
+                            stop
+                        else:
+                            send "%{xiatools.prefix}% 正确使用方式 /gamemode [0|1|2|3] [玩家ID]"
+                            stop
+                    else if arg 2 is offline:
+                        send "%{xiatools.prefix}% 玩家不在线!"
+                        stop
+                else if sender is console:
+                    if arg 2 is online:
+                        if arg 1 is "1" or "creative":
+                            send "%{xiatools.prefix}% 已将玩家 %arg 2% 模式改变至 &l创造模式" to console
+                            set the gamemode of arg 2 to creative
+                            send "%{xiatools.prefix}% 已改变至 创造模式" to arg 2
+                            stop
+                        if arg 1 is "2" or "adventure":
+                            send "%{xiatools.prefix}% 已将玩家 %arg 2% 模式改变至 &l冒险模式" to console
+                            set the gamemode of arg 2 to adventure
+                            send "%{xiatools.prefix}% 已改变至 冒险模式" to arg 2
+                            stop
+                        if arg 1 is "3" or "spectator":
+                            send "%{xiatools.prefix}% 已将玩家 %arg 2% 模式改变至 &l侦查模式" to console
+                            set the gamemode of arg 2 to spectator
+                            send "%{xiatools.prefix}% 已改变至 侦查模式" to arg 2
+                            stop
+                        if arg 1 is "0" or "survival":
+                            send "%{xiatools.prefix}% 已将玩家 %arg 2% 模式改变至 &l生存模式" to console
+                            set the gamemode of arg 2 to survival
+                            send "%{xiatools.prefix}% 已改变至 生存模式" to arg 2
+                            stop
+                        else:
+                            send "%{xiatools.prefix}% 正确使用方式 /gamemode [0|1|2|3] [玩家ID]" to console
+                            stop
+                    else if arg 2 is offline:
+                        send "%{xiatools.prefix}% 玩家不在线!"
+                        stop
+
+
+command /tpa [<offline player>]:
+    aliases: teleportask
+    trigger:
+        if arg 1 is set:
+            if arg 1 is online:
+                set {_p} to name of player
+                if arg 1 is not {_p}:
+                    set {tpa.%arg-1%} to player
+                    send "%{xiatools.prefix}% %player% 想要传送至你所在位置" to arg 1
+                    send "&f请输入 &6&l/tpaccept &f| &6&l/tpdeny &f以接受|拒绝传送请求" to arg 1
+                    send "%{xiatools.prefix}% 传送请求已经发送至 %arg 1%" to player
+                    wait 120 seconds
+                    delete {tpa.%player%}
+                    if {tpa.%arg-1%} is set:
+                        send "%{xiatools.prefix}% 传送申请已超时!" to player
+                        send "%{xiatools.prefix}% 处理传送申请已超时!" to arg 1
+                else if arg 1 is {_p}:
+                    send "%{xiatools.prefix}% 你不能向自己发送传送申请"
+                    stop
+            else if arg 1 is offline:
+                send "%{xiatools.prefix}% 玩家不在线!" to player
+                stop
+        else if arg 1 is not set:
+            send "%{xiatools.prefix}% 正确使用方式: /tpa [玩家]"
+            stop
+        
+command /tpaccept:
+    aliases: tpac
+    trigger:
+        if {tpa.%player%} is set:
+            if sender is player:
+                send "%{xiatools.prefix}% 接受了玩家 %{tpa.%player%}% 的传送申请 | 正在传送" to player
+                if player doesn't have permission "fundamental.delay":
+                    send "%{xiatools.prefix}% 正在传送 请稍等 &c&l{@delay} &fs" to {tpa.%player%}
+                    wait {@delay} seconds
+                    teleport {tpa.%player%} to player
+                    send "%{xiatools.prefix}% 传送完成!" to {tpa.%player%}
+                    delete {tpa.%player%}
+                    stop
+                else:
+                    teleport {tpa.%player%} to player
+                    send "%{xiatools.prefix}% 传送完成!" to {tpa.%player%}
+                    delete {tpa.%player%}
+                    stop
+            if sender is console:
+                send "%{xiatools.prefix}% 请以玩家身份执行该命令" to console
+                stop
+        else if {tpa.%player%} is not set:
+            send "%{xiatools.prefix}% 无待处理传送请求" to player
+            stop
+
+command /tpdeny:
+    aliases: tpde
+    trigger:
+        if {tpa.%player%} is set:
+            send "%{xiatools.prefix}% 拒绝了玩家 %{tpa.%player%}% 的传送申请" to player
+            send "%{xiatools.prefix}% 传送申请被拒绝 传送取消!" to {tpa.%player%}
+            delete {tpa.%player%}
+            stop
+        if {tpa.%player%} is not set:
+            send "%{xiatools.prefix}% 无待处理传送请求"
+            stop
+
+command /tpall:
+    permission: XIATools.Tpall
+    permission message: %{xiatools.prefix}% 你没有使用该命令的权限
+    trigger:
+        if sender is player:
+            teleport all players to player
+            send "%{xiatools.prefix}% 所有玩家已传送至你所在位置" to player
+            stop
+        if sender is console:
+            send "%{xiatools.prefix}% 请以玩家身份执行该命令" to console
+            stop
+
+command /home:
+    trigger:
+        if sender is player:
+            if {home.%player%} is set:
+                if player doesn't have permission "fundamental.nodelay":
+                    send "%{xiatools.prefix}% 正在回家的路上 请稍等 &c&l{@delay} &fs" to player
+                    wait {@delay} second
+                    teleport player to {home.%player%}
+                    send "%{xiatools.prefix}% 传送完成!"
+                    stop
+                else:
+                    teleport player to {home.%player%}
+                    send "%{xiatools.prefix}% 传送完成!"
+                    stop
+            if {home.%player%} is not set:
+                send "%{xiatools.prefix}% 请先设置家 正确使用方式 /sethome"
+                stop
+        if sender is console:
+            send "%{xiatools.prefix}% 请以玩家身份执行该命令" to console
+            stop
+
+command /sethome:
+    trigger:
+        if sender is player:
+            set {home.%player%} to location of player
+            send "%{xiatools.prefix}% 已设置 &6&l家 &f现在你可以通过输入 /home 传送至该位置"
+            stop
+        if sender is console:
+            send "%{xiatools.prefix}% 请以玩家身份执行该命令" to console
+            stop
+
+command /delhome:
+    trigger:
+        if sender is player:
+            if {home.%player%} is set:
+                delete {home.%player%}
+                send "%{xiatools.prefix}% 成功删除 &6&l家" to player
+                stop
+            if {home.%player%} is not set:
+                send "%{xiatools.prefix}% 你未设置家的位置"
+                stop
+        if sender is console:
+            send "%{xiatools.prefix}% 请以玩家身份执行该命令"
+            stop
+
+command /setwarp [<text>]:
+    trigger:
+        if sender is player:
+            if arg 1 is set:
+                set {warp::%arg 1%} to location of player
+                send "%{xiatools.prefix}% 已成功设置传送点 %arg 1%" to player
+                stop
+            if arg 1 is not set:
+                send "%{xiatools.prefix}% 正确使用方式 /setwarp [传送点]" to player
+                stop
+        if sender is console:
+            send "%{xiatools.prefix}% 请以玩家身份执行该命令" to console
+            stop
+
+command /warp [<text>]:
+    trigger:
+        if sender is player:
+            if arg 1 is set:
+                if {warp::%arg 1%} is set:
+                    teleport player to {warp::%arg 1%}
+                    send "%{xiatools.prefix}% 传送完成!" to player
+                    stop
+                if {warp.%arg 1%} is not set:
+                    send "%{xiatools.prefix}% 该传送点不存在"
+                    stop
+            if arg 1 is not set:
+                send "%{xiatools.prefix}% 正确使用方式 /warp [传送点]" to player
+                stop
+        if sender is console:
+            send "%{xiatools.prefix}% 请以玩家身份执行该命令" to console
+            stop
+            
+command /delwarp [<text>]:
+    trigger:
+        if arg 1 is set:
+            if {warp::%arg 1%} is set:
+                delete {warp::%arg 1%}
+                send "%{xiatools.prefix}% 传送点 %arg 1% 删除成功"
+                stop
+            else:
+                send "%{xiatools.prefix}% 该传送点不存在"
+                stop
+        if arg 1 is not set:
+            send "%{xiatools.prefix}% 正确使用方式 /delwarp [传送点]"
+            stop
+
+command /warplist:
+    trigger:
+        send "&7&l传送点列表 &f&l| Warp List" to player
+        send "" to player
+        loop {warp::*}:
+            send loop-index to player
+
+command /fly [<offline player>]:
+    permission: XIATools.Fly
+    permission message: %{xiatools.prefix}% 你没有使用该命令的权限
+    trigger:
+        if sender is player:
+            if arg 1 is not set:
+                if flight mode of player is false:
+                    set flight mode of player to true
+                    make player start flying
+                    send "%{xiatools.prefix}% 飞行模式已启用" to player
+                    stop
+                else if flight mode of player is true:
+                    set flight mode of player to false
+                    make player stop flying
+                    send "%{xiatools.prefix}% 飞行模式已禁用" to player
+                    stop
+            if arg 1 is set:
+                if player has permission "fundamental.flyothers":
+                    if arg 1 is online:
+                        if arg 1 is not player:
+                            if flight mode of arg 1 is false:
+                                set flight mode of arg 1 to true
+                                make arg 1 start flying
+                                send "%{xiatools.prefix}% 已设置 %arg 1% 飞行模式 | &2&l开启" to player
+                                send "%{xiatools.prefix}% 飞行模式已启用" to arg 1
+                                stop
+                            if flight mode of arg 1 is true:
+                                set flight mode of arg 1 to false
+                                make arg 1 stop flying
+                                send "%{xiatools.prefix}% 已设置 %arg 1% 飞行模式 | &c&l禁用" to player
+                                send "%{xiatools.prefix}% 飞行模式已禁用" to arg 1
+                                stop
+                        if arg 1 is player:
+                            send "%{xiatools.prefix}% 正确使用方式 /fly" to player
+                            stop
+                    if arg 1 is offline:
+                        send "%{xiatools.prefix}% 玩家不在线"
+                        stop
+                else:
+                    send "%{xiatools.prefix}% 你没有使用该命令的权限"
+                    stop
+        if sender is console:
+            if arg 1 is not set:
+                send "%{xiatools.prefix}% 请以玩家身份执行该命令"
+                stop
+            if arg 1 is set:
+                if arg 1 is offline:
+                    send "%{xiatools.prefix}% 玩家不在线"
+                    stop
+                if arg 1 is online:
+                    if flight mode of arg 1 is false:
+                        set flight mode of arg 1 to true
+                        make arg 1 start flying
+                        send "%{xiatools.prefix}% 已设置 %arg 1% 飞行模式 | &2&l开启" to console
+                        send "%{xiatools.prefix}% 飞行模式已启用" to arg 1
+                        stop
+                    if flight mode of arg 1 is true:
+                        set flight mode of arg 1 to false
+                        make arg 1 stop flying
+                        send "%{xiatools.prefix}% 已设置 %arg 1% 飞行模式 | &c&l禁用" to console
+                        send "%{xiatools.prefix}% 飞行模式已禁用" to arg 1
+                        stop
+                if arg 1 is offline:
+                    send "%{xiatools.prefix}% 玩家不在线"
+                    stop
